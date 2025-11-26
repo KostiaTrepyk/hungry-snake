@@ -2,10 +2,16 @@
 #include <conio.h>
 #include <windows.h>
 #include <deque>
+#include <string>
 
 using namespace std;
 
 struct Point { int x, y; };
+
+void coutWithDelay(int delay, string text) {
+	Sleep(delay);
+	cout << text;
+}
 
 void countDown() {
 	system("cls");
@@ -36,27 +42,6 @@ private:
 	bool isGameEnd = false;
 	// Częstotliwość klatek na sekundę. Z czasem się zmniejsza odstęp między klatkami - gra się przyspiesza
 	int timeToNextFrame = 175;
-
-public:
-	void reset() {
-		snake = { {W / 2, H / 2} };
-		food = { 5, 5 };
-		dx = 1, dy = 0;
-		isGameEnd = false;
-		timeToNextFrame = 175;
-	}
-
-	void startLoop() {
-		while (true) {
-			keyboardHandler();
-			moveSnakeWithCollisions();
-			render();
-
-			if (isGameEnd == true) { break; }
-
-			Sleep(timeToNextFrame);
-		}
-	}
 
 	// Renderowanie planszy
 	void render() {
@@ -100,11 +85,10 @@ public:
 			}
 			cout << "\n";
 		}
+	}
 
-		// Jeżeli gra ukończona, wyświetla score
-		if (isGameEnd == true) {
-			cout << "\nGra ukonczona. Twoj score: " << getScore() << "\n";
-		}
+	void displayGameOver() {
+		cout << "\nGra ukonczona. Twoj score: " << getScore() << "\n";
 	}
 
 	// Obsługa sterowania. Ustawia move direction węża
@@ -149,6 +133,31 @@ public:
 		}
 	}
 
+public:
+	void reset() {
+		snake = { {W / 2, H / 2} };
+		food = { 5, 5 };
+		dx = 1, dy = 0;
+		isGameEnd = false;
+		timeToNextFrame = 175;
+	}
+
+	void startLoop() {
+		while (true) {
+			keyboardHandler();
+			moveSnakeWithCollisions();
+			render();
+
+			if (isGameEnd == true)
+			{
+				displayGameOver();
+				break;
+			}
+
+			Sleep(timeToNextFrame);
+		}
+	}
+
 	int getScore() {
 		return snake.size() - 1;
 	}
@@ -161,30 +170,19 @@ int main() {
 
 	// Wyświetlamy tytuł gry oraz je zasady
 	cout << "Witam w grze \"Hungry Snake\"!\n";
-	Sleep(2000);
-	cout << "\nZasady gry:\n";
-	Sleep(1000);
-	cout << " 1. Waz porusza sie po polu i nie moze przechodzic przez sciany. Uderzenie w granice pola konczy gre.\n";
-	Sleep(300);
-	cout << " 2. Jedzenie pojawia sie w losowych wspolrzednych. Zjedzenie jedzenia powoduje wydluzenie weza.\n";
-	Sleep(300);
-	cout << " 3. Jesli waz uderzy sam w siebie, gra rowniez sie konczy.\n";
-	Sleep(300);
-	cout << " 4. Sterowanie: W A S D - ruch w gore, w lewo, w dol, w prawo.\n";
-	Sleep(300);
-	cout << " 5. Cel gry - przetrwac jak najdluzej i wyhodowac jak najdluzszego weza. Chociaz wszyscy wiemy, jak to sie konczy.\n";
-	Sleep(2000);
+	coutWithDelay(2000, "\nZasady gry:\n");
+	coutWithDelay(1000, " 1. Waz porusza sie po polu i nie moze przechodzic przez sciany. Uderzenie w granice pola konczy gre.\n");
+	coutWithDelay(300, " 2. Jedzenie pojawia sie w losowych wspolrzednych. Zjedzenie jedzenia powoduje wydluzenie weza.\n");
+	coutWithDelay(300, " 3. Jesli waz uderzy sam w siebie, gra rowniez sie konczy.\n");
+	coutWithDelay(300, " 4. Sterowanie: W A S D - ruch w gore, w lewo, w dol, w prawo.\n");
+	coutWithDelay(300, " 5. Cel gry - przetrwac jak najdluzej i wyhodowac jak najdluzszego weza. Chociaz wszyscy wiemy, jak to sie konczy.\n");
 
-	cout << "\nOznaczenia:\n";
-	Sleep(500);
-	cout << " O - waz\n";
-	Sleep(100);
-	cout << " * - jedzenie\n";
-	Sleep(100);
-	cout << " - lub | - granica\n";
-	Sleep(1000);
+	coutWithDelay(2000, "\nOznaczenia:\n");
+	coutWithDelay(500, " O - waz\n");
+	coutWithDelay(100, " * - jedzenie\n");
+	coutWithDelay(100, " - lub | - granica\n");
 
-	cout << "\nJezeli jestes gotow, wpisz \"start\": ";
+	coutWithDelay(1000, "\nJezeli jestes gotow, wpisz \"start\": ");
 	cin >> command;
 
 	if (command == "start") { countDown(); }
